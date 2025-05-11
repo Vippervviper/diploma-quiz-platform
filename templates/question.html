@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>{{ quiz.title }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {% if form %}
+      <div class="question-block">
+        <p><strong>{{ question.content }}</strong></p>
+        {{ form.as_p }}
+      </div>
+      <button type="submit">Отправить ответ</button>
+    {% else %}
+      <p>Все вопросы пройдены. Перенаправление к результатам...</p>
+    {% endif %}
+  </form>
+{% endblock %}
+

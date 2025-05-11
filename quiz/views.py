@@ -270,3 +270,20 @@ def logout_user(request):
     messages.success(request, 'Вы вышли из системы')
     return redirect('login')
 
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def quiz_result(request, quiz_name, sitting_id):
+    sitting = get_object_or_404(Sitting, id=sitting_id, user=request.user)
+    if not sitting.complete:
+        return redirect('quiz:quiz_question', quiz_name=quiz_name)
+
+    total_questions = sitting.sitting_questions.count()
+    correct_answers = sitting.sitting_questions.filter(answer__correct=True).count()
+
+    return render(request, 'result.html', {
+        'quiz': sitting.quiz,
+        'total': total_questions,
+        'correct': correct_answers,
+    })
+

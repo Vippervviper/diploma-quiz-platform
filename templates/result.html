@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Результаты теста: "{{ quiz.title }}"</h2>
+  <p>Вы ответили правильно на <strong>{{ score }}</strong> из <strong>{{ max_score }}</strong> вопросов.</p>
+  <p>Процент правильных ответов: <strong>{{ percent }}%</strong></p>
+
+  {% if questions %}
+    <h3>Ответы:</h3>
+    <ul>
+      {% for question in questions %}
+        <li>
+          <strong>{{ question.content }}</strong><br>
+          <em>Ваш ответ:</em> {{ sitting.get_user_answer(question.id) }}<br>
+          <em>Правильный ответ:</em> {{ question.get_correct_answer }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}
+

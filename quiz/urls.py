@@ -1,51 +1,42 @@
-from django.conf.urls import url
-from .views import QuizListView, CategoriesListView, \
-    ViewQuizListByCategory, QuizUserProgressView, QuizMarkingList, \
-    QuizMarkingDetail, QuizDetailView, QuizTake, index, \
-    login_user, register_user
+from django.urls import path
+from .views import (
+    QuizListView,
+    CategoriesListView,
+    ViewQuizListByCategory,
+    QuizUserProgressView,
+    QuizMarkingList,
+    QuizMarkingDetail,
+    QuizDetailView,
+    QuizTake,
+    index,
+    login_user,
+    register_user,
+    quiz_result,
+)
 from django.contrib.auth import views as auth_views
 
+app_name = 'quiz'
+
 urlpatterns = [
-    url(regex=r'^$', view=index, name='index'),
-    url(regex=r'^login/$', view=login_user, name='login'),
-    # Теперь при выходе — редирект на страницу входа
-    url(
-        regex=r'^logout/$',
-        view=auth_views.LogoutView.as_view(next_page='/login/'),
-        name='logout'
-    ),
-    url(regex=r'^register/$', view=register_user, name='register'),
+    path('', index, name='index'),
+    path('login/', login_user, name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='/login/'), name='logout'),
+    path('register/', register_user, name='register'),
 
-    url(regex=r'^quizzes/$',
-        view=QuizListView.as_view(),
-        name='quiz_index'),
+    path('quizzes/', QuizListView.as_view(), name='quiz_index'),
 
-    url(regex=r'^category/$',
-        view=CategoriesListView.as_view(),
-        name='quiz_category_list_all'),
+    path('category/', CategoriesListView.as_view(), name='quiz_category_list_all'),
+    path('category/<str:category_name>/', ViewQuizListByCategory.as_view(), name='quiz_category_list_matching'),
 
-    url(regex=r'^category/(?P<category_name>[\w|\W-]+)/$',
-        view=ViewQuizListByCategory.as_view(),
-        name='quiz_category_list_matching'),
+    path('progress/', QuizUserProgressView.as_view(), name='quiz_progress'),
 
-    url(regex=r'^progress/$',
-        view=QuizUserProgressView.as_view(),
-        name='quiz_progress'),
+    path('marking/', QuizMarkingList.as_view(), name='quiz_marking'),
+    path('marking/<int:pk>/', QuizMarkingDetail.as_view(), name='quiz_marking_detail'),
 
-    url(regex=r'^marking/$',
-        view=QuizMarkingList.as_view(),
-        name='quiz_marking'),
+    path('<slug:slug>/', QuizDetailView.as_view(), name='quiz_start_page'),
+    path('<slug:quiz_name>/take/', QuizTake.as_view(), name='quiz_question'),
 
-    url(regex=r'^marking/(?P<pk>[\d.]+)/$',
-        view=QuizMarkingDetail.as_view(),
-        name='quiz_marking_detail'),
-
-    url(regex=r'^(?P<slug>[\w-]+)/$',
-        view=QuizDetailView.as_view(),
-        name='quiz_start_page'),
-
-    url(regex=r'^(?P<quiz_name>[\w-]+)/take/$',
-        view=QuizTake.as_view(),
-        name='quiz_question'),
+    # Добавлен маршрут отображения результатов
+    path('<slug:quiz_name>/result/<int:sitting_id>/', quiz_result, name='quiz_result'),
 ]
 
