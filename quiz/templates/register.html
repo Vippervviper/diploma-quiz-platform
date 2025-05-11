@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Регистрация" %}{% endblock %}
+
+{% block content %}
+  <h2>{% trans "Регистрация" %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_username">{% trans "Логин" %}:</label>
+      <input type="text" id="id_username" name="username" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="id_password">{% trans "Пароль" %}:</label>
+      <input type="password" id="id_password" name="password" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="id_password2">{% trans "Повторите пароль" %}:</label>
+      <input type="password" id="id_password2" name="password2" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">{% trans "Зарегистрироваться" %}</button>
+  </form>
+{% endblock %}
+

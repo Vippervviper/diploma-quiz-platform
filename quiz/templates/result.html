@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+{% block description %}{{ quiz.title }} — {% trans "Результаты тестирования" %}{% endblock %}
+
+{% block content %}
+  <h2>{% trans "Результаты тестирования" %}</h2>
+  <p>
+    {% trans "Название теста" %}: <strong>{{ quiz.title }}</strong>
+  </p>
+  <hr>
+
+  {% for question, user_answer, correct_answer, explanation in detailed_results %}
+    <div class="mb-4">
+      <p><strong>{{ question }}</strong></p>
+      <p>{% trans "Ваш ответ" %}: {{ user_answer }}</p>
+      {% if user_answer != correct_answer %}
+        <div class="alert alert-info">
+          <p><strong>{% trans "Пояснение" %}:</strong> {{ explanation }}</p>
+        </div>
+      {% endif %}
+    </div>
+  {% endfor %}
+
+  <p>
+    {% trans "Вы правильно ответили на" %} {{ score }} {% trans "вопросов из" %} {{ max_score }}, 
+    {% trans "что составляет" %} {{ percent }}% {% trans "правильных ответов" %}.
+  </p>
+  <p>
+    {% trans "Ваш результат за сессию" %}: {{ session }} {% trans "из возможных" %} {{ possible }}.
+  </p>
+  <hr>
+  <p>{% trans "Рекомендуем повторить вопросы позже для закрепления материала." %}</p>
+  <p>{% trans "Результаты этого теста сохранены в разделе \"Прогресс\"." %}</p>
+{% endblock %}
+

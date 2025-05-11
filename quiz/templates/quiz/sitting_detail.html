@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load quiz_tags %}
+
+{% block title %}
+{% trans "Результат теста" %} {{ sitting.quiz.title }} {% trans "для" %} {{ sitting.user }}
+{% endblock %}
+
+{% block content %}
+<h2>{% trans "Название теста" %}: {{ sitting.quiz.title }}</h2>
+<h3>{% trans "Категория" %}: {{ sitting.quiz.category }}</h3>
+<p>{{ sitting.quiz.description }}</p>
+<hr>
+<p>{% trans "Пользователь" %}: {{ sitting.user }}</p>
+<p>{% trans "Завершено" %}: {{ sitting.end|date }}</p>
+<p>{% trans "Результат" %}: {{ sitting.get_percent_correct }}%</p>
+
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>{% trans "Вопрос" %}</th>
+      <th>{% trans "Ответ пользователя" %}</th>
+      <th>{% trans "Статус" %}</th>
+      <th>{% trans "Изменить" %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for question in questions %}
+      <tr>
+        <td>
+          {{ question.content }}
+          {% if question.figure %}
+            <div style="max-width: 100px;">
+              <img src="{{ question.figure.url }}" alt="{{ question.figure }}"/>
+            </div>
+          {% endif %}
+        </td>
+        <td>{{ question|answer_choice_to_string:question.user_answer }}</td>
+        <td>
+          {% if question.id in sitting.get_incorrect_questions %}
+            <p>{% trans "Неверно" %}</p>
+          {% else %}
+            <p>{% trans "Верно" %}</p>
+          {% endif %}
+        </td>
+        <td>
+          <form action="" method="POST">{% csrf_token %}
+            <input type="hidden" name="qid" value="{{ question.id }}">
+            <button type="submit" class="btn btn-warning">
+              {% trans "Изменить оценку ответа" %}
+            </button>
+          </form>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+

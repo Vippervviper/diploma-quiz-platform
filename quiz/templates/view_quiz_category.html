@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Тесты по категории" %} {{ category.category }}{% endblock %}
+{% block description %}{% trans "Список тестов, связанных с категорией" %} {{ category.category }}{% endblock %}
+
+{% block content %}
+  <h1>
+    {% trans "Тесты в категории" %} 
+    <strong>{{ category.category }}</strong>
+  </h1>
+
+  {% if quizzes %}
+    <ul class="list-group">
+      {% for quiz in quizzes %}
+        <li class="list-group-item">
+          <a href="{% url 'quiz_start_page' quiz.slug %}">{{ quiz.title }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>{% trans "Тестов в этой категории нет." %}</p>
+  {% endif %}
+{% endblock %}
+

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load quiz_tags %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+{% block description %}{{ quiz.title }} - {{ quiz.description }}{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <p>{% trans "Вы уже проходили этот тест — доступна только одна попытка." %}</p>
+{% else %}
+  <p>{% trans "Этот тест доступен только зарегистрированным пользователям." %}</p>
+{% endif %}
+
+{% endblock %}
+
